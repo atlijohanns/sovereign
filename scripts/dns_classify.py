@@ -61,7 +61,7 @@ def classify_hosting_category(asn: str, org: str) -> str:
         return "Unknown"
 
     # Local Icelandic hosting
-    icelandic_markers = ["1984", "siminn", "simnet", "hysing", "rhnet", ".is"]
+    icelandic_markers = ["1984", "siminn", "simnet", "hysing", "rhnet", "advania", ".is"]
     if any(m in asn_l or m in org_l for m in icelandic_markers):
         return "Local (.is)"
 
@@ -190,6 +190,11 @@ else:
 
 # Save classified results to output folder with timestamp
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_path = Path(__file__).parent.parent / "output" / f"dns_full_results-{timestamp}.csv"
-df.to_csv(output_path, index=False)
-print(f"\nSaved classified results to {output_path}")
+output_path_csv = Path(__file__).parent.parent / "output" / f"dns_full_results-{timestamp}.csv"
+output_path_json = Path(__file__).parent.parent / "output" / f"dns_full_results-{timestamp}.json"
+
+df.to_csv(output_path_csv, index=False)
+print(f"\nSaved classified results to {output_path_csv}")
+
+df.to_json(output_path_json, orient="records", indent=2, force_ascii=False)
+print(f"Saved JSON results to {output_path_json}")
