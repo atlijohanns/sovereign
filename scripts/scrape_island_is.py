@@ -89,6 +89,7 @@ def main():
     data_is = get_next_data(PAGE_URL_is)
     orgs_is = get_organizations_from_next_data(data_is)
     print(f"Found {len(orgs_is)} Icelandic organizations")
+    
   
 
     # Fetch English data
@@ -96,12 +97,21 @@ def main():
     data_en = get_next_data(PAGE_URL_en)
     orgs_en = get_organizations_from_next_data(data_en)
     print(f"Found {len(orgs_en)} English organizations")
+    
   
 
     # Create lookup dictionary for English names by ID
     en_lookup = {o.get("id"): o.get("title") for o in orgs_en}
     # Create lookup dictionary for English tags by ID
-    en_tag_lookup = {o.get("id"): o.get("tag", {}).get("title", "") if isinstance(o.get("tag"), dict) else "" for o in orgs_en}
+    def extract_tag(org):
+        tag = org.get("tag")
+        if isinstance(tag, list) and len(tag) > 0:
+            return tag[0].get("title", "")
+        elif isinstance(tag, dict):
+            return tag.get("title", "")
+        return ""
+    
+    en_tag_lookup = {o.get("id"): extract_tag(o) for o in orgs_en}
 
     # Build combined rows
     rows = []
@@ -109,7 +119,7 @@ def main():
         org_id = o.get("id")
         url = build_island_url(o)
         domain = extract_root_domain(url)
-        tag_icelandic = o.get("tag", {}).get("title", "") if isinstance(o.get("tag"), dict) else ""
+        tag_icelandic = extract_tag(o)
         tag_english = en_tag_lookup.get(org_id, "")
         
         rows.append(
