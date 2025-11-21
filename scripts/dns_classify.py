@@ -23,7 +23,8 @@ def classify_email_provider(mx: str, spf: str) -> str:
     if ".is" in text:
         return "Local (.is)"
 
-    if not mx and not spf:
+    # Check for no email configuration or explicit rejection
+    if not mx and (not spf or "v=spf1 -all" in spf.lower()):
         return "Unknown"
 
     return "Other"
@@ -61,12 +62,12 @@ def classify_hosting_category(asn: str, org: str) -> str:
         return "Unknown"
 
     # Local Icelandic hosting
-    icelandic_markers = ["1984", "siminn", "simnet", "hysing", "rhnet", "advania", ".is"]
+    icelandic_markers = ["1984", "siminn", "simnet", "hysing", "rhnet", "advania", "nova", ".is"]
     if any(m in asn_l or m in org_l for m in icelandic_markers):
         return "Local (.is)"
 
     # US / big providers – simplified labels
-    if "amazon" in asn_l or "amazon" in org_l or "aws" in org_l:
+    if "amazon" in asn_l or "amazon" in org_l or "aws" in org_l or "amazo" in org_l:
         return "AWS"
 
     if "msft" in asn_l or "microsoft" in org_l:
