@@ -1,4 +1,4 @@
-# Digital Sovereignty Analysis of Icelandic Government Agencies
+# Analysis of Icelandic Government Agencies
 
 ## What is this?
 
