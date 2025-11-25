@@ -70,10 +70,3 @@ The final results include:
 - `effective_hosting_category`: Where the website is actually hosted
 - Disclaimer fields explaining detection logic (e.g., "Microsoft 365 detected in SPF. MX points elsewhere.")
 
-## Requirements
-
-- Python 3.7+
-- dnspython
-- ipwhois
-- pandas
-- requests
